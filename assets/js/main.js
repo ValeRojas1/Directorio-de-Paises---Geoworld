@@ -3,7 +3,17 @@
  * Sin dependencias externas.
  */
 
-const BASE_URL = '/directorio_paises/services';
+const getBasePath = () => {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    if (parts[parts.length - 1].includes('.')) {
+        parts.pop();
+    }
+    return parts.join('/').replace(/\/$/, '');
+};
+
+const APP_PATH = getBasePath();
+const BASE_URL = `${APP_PATH}/services`;
 
 const ENDPOINTS = {
     buscar: `${BASE_URL}/paises/buscar.php`,
@@ -22,7 +32,7 @@ const ENDPOINTS = {
     topBusquedas: `${BASE_URL}/historial/top_busquedas.php`,
 };
 
-const PAGE_DETALLE = '/directorio_paises/detalle.php';
+const PAGE_DETALLE = `${APP_PATH}/detalle.php`;
 
 async function apiRequest(url, options = {}) {
     const response = await fetch(url, options);

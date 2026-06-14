@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoWorld — Directorio de Países</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colores oficiales del brief */
+            --color-azul: #ACD2F1;
+            --color-rojizo: #F1ACAF;
+            --color-crema: #F1EEAC;
+            --color-blanco: #FFFFFF;
+            --color-texto: #1A2B3C;
+            --color-gris: #6B7A8D;
+            
+            /* Postura de diseño */
+            --shadow-soft: 0 4px 16px rgba(0,0,0,0.08);
+            --radius-btn: 10px;
+            --radius-card: 12px;
+            --radius-pill: 20px;
+            --line-height: 1.6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-texto);
+            background-color: var(--color-blanco);
+            line-height: var(--line-height);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Tipografía */
+        h1 { font-size: 48px; font-weight: 700; line-height: 1.2; color: var(--color-texto); }
+        h2 { font-size: 32px; font-weight: 600; color: var(--color-texto); }
+        h3 { font-size: 20px; font-weight: 600; color: var(--color-texto); }
+        p { font-size: 16px; }
+        small { font-size: 13px; color: var(--color-gris); }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        /* Componentes Globales */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: var(--radius-btn);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-azul);
+            color: var(--color-texto);
+        }
+        .btn-primary:hover {
+            filter: brightness(0.92);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-rojizo);
+            color: var(--color-texto);
+        }
+        .btn-secondary:hover {
+            filter: brightness(0.92);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--color-azul);
+            color: var(--color-texto);
+        }
+        .btn-outline:hover {
+            background-color: rgba(172, 210, 241, 0.1);
+        }
+
+        /* SECTION 1 - NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            height: 72px;
+            background: var(--color-blanco);
+            border-bottom: 1px solid var(--color-azul);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--color-texto);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 36px;
+        }
+        .nav-link {
+            font-size: 15px;
+            color: var(--color-gris);
+            text-decoration: none;
+            position: relative;
+            padding: 6px 0;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: var(--color-texto);
+        }
+        .nav-link:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-rojizo);
+        }
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        /* SECTION 2 - HERO */
+        .hero {
+            min-height: 560px;
+            background: linear-gradient(135deg, var(--color-crema) 0%, var(--color-azul) 100%);
+            display: flex;
+            align-items: center;
+            padding: 80px 0;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 0.58fr 0.42fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .hero-badge {
+            display: inline-flex;
+            background: rgba(241, 172, 175, 0.3);
+            color: var(--color-texto);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .hero h1 {
+            margin-bottom: 24px;
+            white-space: pre-line;
+            letter-spacing: -0.02em;
+        }
+        .hero h3 {
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: var(--color-texto);
+            max-width: 90%;
+            line-height: 1.5;
+        }
+        .search-bar {
+            background: var(--color-blanco);
+            height: 52px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            padding: 0 6px 0 20px;
+            margin-bottom: 24px;
+            max-width: 600px;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: var(--color-texto);
+            background: transparent;
+        }
+        .search-bar .search-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        .search-bar .btn {
+            height: 40px;
+        }
+        .hero-tags {
+            display: flex;
+            gap: 12px;
+        }
+        .tag-pill {
+            background: var(--color-crema);
+            border: 1px solid var(--color-azul);
+            color: var(--color-texto);
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tag-pill:hover {
+            background: var(--color-azul);
+            transform: scale(1.05);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+        .hero-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            transform: rotate(-3deg);
+        }
+        .mini-card {
+            background: var(--color-blanco);
+            padding: 24px;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.3s;
+        }
+        .mini-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        .mini-card .flag {
+            font-size: 40px;
+            margin-bottom: 4px;
+        }
+
+        /* SECTION 3 - STATS BAR */
+        .stats-bar {
+            background: var(--color-azul);
+            height: 100px;
+            display: flex;
+            align-items: center;
+        }
+        .stats-grid {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background-color: rgba(26, 43, 60, 0.15);
+        }
+        .stat-item h2 {
+            margin-bottom: 4px;
+            font-size: 36px;
+        }
+        .stat-item small {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* SECTION 4 - FEATURED */
+        .featured {
+            padding: 100px 0;
+            background: var(--color-blanco);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header p {
+            color: var(--color-gris);
+            margin-top: 12px;
+            font-size: 18px;
+        }
+        .countries-scroll {
+            display: flex;
+            gap: 32px;
+            overflow-x: auto;
+            padding: 20px 4px 60px;
+            scrollbar-width: none;
+        }
+        .countries-scroll::-webkit-scrollbar { display: none; }
+        
+        .country-card {
+            min-width: 280px;
+            background: var(--color-blanco);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-soft);
+            border-top: 3px solid var(--color-azul);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .country-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .country-flag-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 9px 9px 0 0;
+            background-color: #f8f9fa;
+        }
+        .card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--color-gris);
+        }
+        .badge-pill {
+            display: inline-flex;
+            background: var(--color-crema);
+            border: 1px solid var(--color-azul);
+            color: var(--color-texto);
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            width: fit-content;
+        }
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .card-actions .btn {
+            flex: 1;
+            font-size: 14px;
+            padding: 12px 0;
+        }
+        .btn-fav {
+            background: rgba(241, 172, 175, 0.3);
+            flex: 0.8 !important;
+        }
+
+        /* SECTION 5 - COMPARATOR */
+        .comparator-cta {
+            padding: 120px 0;
+            background: var(--color-crema);
+        }
+        .comparator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+        .check-list {
+            list-style: none;
+            margin: 32px 0 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .check-list li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 500;
+        }
+        .comparator-mockup {
+            background: var(--color-blanco);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--color-azul);
+            overflow: hidden;
+            padding: 1px;
+        }
+        .mockup-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .mockup-table th {
+            background: var(--color-azul);
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-texto);
+        }
+        .mockup-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(172, 210, 241, 0.2);
+            color: var(--color-texto);
+        }
+        .mockup-table tr:nth-child(even) {
+            background: rgba(241, 238, 172, 0.2);
+        }
+        .country-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        /* SECTION 6 - FOOTER */
+        .footer {
+            background-color: var(--color-texto);
+            color: var(--color-blanco);
+            padding: 100px 0 40px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 80px;
+            margin-bottom: 80px;
+        }
+        .footer-brand .logo {
+            color: var(--color-blanco);
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 12px;
+            font-size: 15px;
+            max-width: 280px;
+        }
+        .footer-brand .api-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 20px;
+            display: block;
+        }
+        .footer-col h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: var(--color-azul);
+        }
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--color-rojizo);
+            padding-left: 5px;
+        }
+        .footer-bottom {
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1 - NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">🌍 GeoWorld</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Inicio</a>
+                <a href="#" class="nav-link">Explorar</a>
+                <a href="#" class="nav-link">Comparar</a>
+                <a href="#" class="nav-link">Favoritos</a>
+            </div>
+            <div class="nav-actions">
+                <a href="#" class="btn btn-outline">Iniciar Sesión</a>
+                <a href="#" class="btn btn-primary">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SECTION 2 - HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge">🌐 250+ países disponibles</div>
+                    <h1>Descubre y compara
+países del mundo</h1>
+                    <h3>Explora información detallada de más de 250 países: idiomas, monedas, poblaciones y mucho más. Compara entre ellos en segundos.</h3>
+                    
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Buscar un país por nombre, capital o idioma...">
+                        <button class="btn btn-primary">Buscar</button>
+                    </div>
+
+                    <div class="hero-tags">
+                        <div class="tag-pill">🌍 Por región</div>
+                        <div class="tag-pill">🗣️ Por idioma</div>
+                        <div class="tag-pill">💰 Por moneda</div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="hero-cards-grid">
+                        <div class="mini-card">
+                            <span class="flag">🇵🇪</span>
+                            <strong>Perú</strong>
+                            <small>Pob: 33.2M</small>
+                        </div>
+                        <div class="mini-card">
+                            <span class="flag">🇯🇵</span>
+                            <strong>Japón</strong>
+                            <small>Pob: 125.8M</small>
+                        </div>
+                        <div class="mini-card">
+                            <span class="flag">🇩🇪</span>
+                            <strong>Alemania</strong>
+                            <small>Pob: 83.2M</small>
+                        </div>
+                        <div class="mini-card">
+                            <span class="flag">🇧🇷</span>
+                            <strong>Brasil</strong>
+                            <small>Pob: 214.3M</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 - STATS BAR -->
+    <div class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h2>250+</h2>
+                    <small>Países registrados</small>
+                </div>
+                <div class="stat-item">
+                    <h2>8</h2>
+                    <small>Regiones del mundo</small>
+                </div>
+                <div class="stat-item">
+                    <h2>100+</h2>
+                    <small>Idiomas representados</small>
+                </div>
+                <div class="stat-item">
+                    <h2>15K+</h2>
+                    <small>Comparaciones realizadas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4 - FEATURED COUNTRIES -->
+    <section class="featured">
+        <div class="container">
+            <div class="section-header">
+                <h2>Países destacados esta semana</h2>
+                <p>Descubiertos por nuestra comunidad educativa</p>
+            </div>
+
+            <div class="countries-scroll">
+                <!-- Perú -->
+                <div class="country-card">
+                    <img src="https://flagcdn.com/w320/pe.png" alt="Bandera de Perú" class="country-flag-img">
+                    <div class="card-body">
+                        <h3>Perú</h3>
+                        <div class="card-meta">
+                            <div class="meta-item">🏛️ Lima</div>
+                            <div class="badge-pill">América del Sur</div>
+                            <div class="meta-item">👥 33,191,428</div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary">Ver detalles</a>
+                            <button class="btn btn-secondary btn-fav">❤️ Favorito</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colombia -->
+                <div class="country-card">
+                    <img src="https://flagcdn.com/w320/co.png" alt="Bandera de Colombia" class="country-flag-img">
+                    <div class="card-body">
+                        <h3>Colombia</h3>
+                        <div class="card-meta">
+                            <div class="meta-item">🏛️ Bogotá</div>
+                            <div class="badge-pill">América del Sur</div>
+                            <div class="meta-item">👥 50,882,884</div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary">Ver detalles</a>
+                            <button class="btn btn-secondary btn-fav">❤️ Favorito</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Japón -->
+                <div class="country-card">
+                    <img src="https://flagcdn.com/w320/jp.png" alt="Bandera de Japón" class="country-flag-img">
+                    <div class="card-body">
+                        <h3>Japón</h3>
+                        <div class="card-meta">
+                            <div class="meta-item">🏛️ Tokio</div>
+                            <div class="badge-pill">Asia</div>
+                            <div class="meta-item">👥 125,836,021</div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary">Ver detalles</a>
+                            <button class="btn btn-secondary btn-fav">❤️ Favorito</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alemania -->
+                <div class="country-card">
+                    <img src="https://flagcdn.com/w320/de.png" alt="Bandera de Alemania" class="country-flag-img">
+                    <div class="card-body">
+                        <h3>Alemania</h3>
+                        <div class="card-meta">
+                            <div class="meta-item">🏛️ Berlín</div>
+                            <div class="badge-pill">Europa</div>
+                            <div class="meta-item">👥 83,240,525</div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary">Ver detalles</a>
+                            <button class="btn btn-secondary btn-fav">❤️ Favorito</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Francia -->
+                <div class="country-card">
+                    <img src="https://flagcdn.com/w320/fr.png" alt="Bandera de Francia" class="country-flag-img">
+                    <div class="card-body">
+                        <h3>Francia</h3>
+                        <div class="card-meta">
+                            <div class="meta-item">🏛️ París</div>
+                            <div class="badge-pill">Europa</div>
+                            <div class="meta-item">👥 67,391,582</div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary">Ver detalles</a>
+                            <button class="btn btn-secondary btn-fav">❤️ Favorito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 - COMPARATOR CTA -->
+    <section class="comparator-cta">
+        <div class="container">
+            <div class="comparator-grid">
+                <div class="comparator-info">
+                    <div class="hero-badge">⚡ Función estrella</div>
+                    <h2>Compara países<br>en segundos</h2>
+                    <p>Selecciona hasta 6 países y compara sus datos clave lado a lado: población, área, idiomas, monedas y fronteras. Guarda tus comparaciones favoritas.</p>
+                    <ul class="check-list">
+                        <li>✅ Hasta 6 países simultáneos</li>
+                        <li>✅ Tabla comparativa exportable</li>
+                        <li>✅ Guarda comparaciones en tu perfil</li>
+                        <li>✅ Compartir con enlace único</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;">Ir al Comparador →</a>
+                </div>
+
+                <div class="comparator-mockup">
+                    <table class="mockup-table">
+                        <thead>
+                            <tr>
+                                <th>País</th>
+                                <th>Población</th>
+                                <th>Área</th>
+                                <th>Idioma</th>
+                                <th>Moneda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="country-name-cell">🇵🇪 Perú</td>
+                                <td>33.2M</td>
+                                <td>1.28M km²</td>
+                                <td>Español</td>
+                                <td>Sol</td>
+                            </tr>
+                            <tr>
+                                <td class="country-name-cell">🇨🇴 Colombia</td>
+                                <td>50.9M</td>
+                                <td>1.14M km²</td>
+                                <td>Español</td>
+                                <td>Peso</td>
+                            </tr>
+                            <tr>
+                                <td class="country-name-cell">🇨🇱 Chile</td>
+                                <td>19.1M</td>
+                                <td>756K km²</td>
+                                <td>Español</td>
+                                <td>Peso</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6 - FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">🌍 GeoWorld</a>
+                    <p>Tu portal educativo de geografía mundial especializado en datos abiertos.</p>
+                    <span class="api-text">Desarrollado con REST Countries API v3.1</span>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Explorar</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Todos los países</a></li>
+                        <li><a href="#">Por región</a></li>
+                        <li><a href="#">Por idioma</a></li>
+                        <li><a href="#">Por moneda</a></li>
+                        <li><a href="#">Más populares</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Mi Cuenta</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Iniciar Sesión</a></li>
+                        <li><a href="#">Registrarse</a></li>
+                        <li><a href="#">Mis Favoritos</a></li>
+                        <li><a href="#">Mis Comparaciones</a></li>
+                        <li><a href="#">Mi Perfil</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Info</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Acerca de</a></li>
+                        <li><a href="#">API utilizada</a></li>
+                        <li><a href="#">Términos de uso</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    © 2025 GeoWorld — Proyecto educativo | Universidad Continental
+                </div>
+                <div class="footer-made">
+                    Hecho con ❤️ en Perú 🇵🇪
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
